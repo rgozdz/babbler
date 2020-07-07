@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { AuthContext } from "./Auth";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { LinearProgress } from '@material-ui/core';
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
   const { currentUser, isLoading } = useContext(AuthContext);
@@ -13,9 +13,8 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
         if(!!currentUser && !isLoading) {
           return <RouteComponent {...routeProps} />
         } else if(isLoading) {
-          return <CircularProgress color="secondary" />
+          return <LinearProgress />
         } else {
-          console.log(isLoading);
           return <Redirect to={"/login"} />
         }
       }}

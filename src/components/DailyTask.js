@@ -72,6 +72,7 @@ export default function DailyTask() {
   const classes = useStyles();
   const [word, setWord] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNextDisabled, setIsNextDisabled] = useState(true);
 
   useEffect(() => {
     firebase.database().ref('/words/').on('value',(snapshot) => {
@@ -91,8 +92,15 @@ export default function DailyTask() {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
+  const handleDisabled = () => {
+    const input = document.querySelector('#standard-basic');
+    if(input.value === word.name) {
+      setIsNextDisabled(false);
+    }
+  }
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setIsNextDisabled(true);
   };
 
   const handleBack = () => {
@@ -106,6 +114,7 @@ export default function DailyTask() {
   if(word && !isLoading){
     return (
       <div className={classes.root}>
+        <Paper elevation={3}>
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => (
             <Step key={label}>
@@ -114,7 +123,9 @@ export default function DailyTask() {
                 <Typography>{getStepContent(index, word)}</Typography>
                 <div className={classes.actionsContainer}>
                   <div>
-                    <TextField id="standard-basic" label="write here" />
+                    <TextField id="standard-basic" 
+                      label="write here" 
+                      onChange={handleDisabled} />
                     <Button
                       disabled={activeStep === 0}
                       onClick={handleBack}
@@ -123,6 +134,7 @@ export default function DailyTask() {
                       Back
                     </Button>
                     <Button
+                      disabled={isNextDisabled}
                       variant="contained"
                       color="primary"
                       onClick={handleNext}
@@ -136,6 +148,7 @@ export default function DailyTask() {
             </Step>
           ))}
         </Stepper>
+        </Paper>
         {activeStep === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>All steps completed - you&apos;re finished</Typography>
