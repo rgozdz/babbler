@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import firebase from "../firebase";
+import { AuthContext } from "../Auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,26 +47,13 @@ function getStepContent(step, word) {
   }
 }
 
-async function getDailyWord() {
-
-  try {
-    var word = firebase.database().ref('/words/').once('value').then((snapshot)=>{
-      return snapshot.val();
-    });
-    return word;
-    
-  } catch (error) {
-    alert(error);
-  }
-}
-
 function isToday(element) {
   let date = new Date();
   const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: '2-digit', day: '2-digit' }) 
   const [{ value: month },,{ value: day },,{ value: year }] = dateTimeFormat .formatToParts(date);
   const today = `${day}-${month}-${year}`;
 
-  return element.date ==today;
+  return element.date === today;
 }
 
 export default function DailyTask() {
@@ -73,20 +61,49 @@ export default function DailyTask() {
   const [word, setWord] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    firebase.database().ref('/words/').on('value',(snapshot) => {
+    firebase.database().ref('/words/').once('value')
+    .then(snapshot => {
       const words = snapshot.val();
+      
       if (words) {
         const todayWord = Object.keys(words).map(key => ({
           ...words[key],
           uid: key,
-        }))
-        .find(isToday);
-        setWord(todayWord);
-        setIsLoading(false);
+        })).find(isToday);
+
+        return todayWord; 
       }
-    });      
+      })
+      .then(todayWord => {
+        if(todayWord){
+          firebase.database().ref('/completedTasks/').once('value')
+          .then((snapshot) => {
+            const completedTaskList = snapshot.val();
+            if (completedTaskList) {
+              const completedTasks = Object.keys(completedTaskList).map(key => ({
+                ...completedTaskList[key],
+                uid: key,
+              }));
+          
+              console.log(todayWord);
+              const completedTask = completedTasks.
+                find(task => task.userUid === currentUser.uid && task.wordUid === todayWord.uid);
+          
+                if(!completedTask){
+                  setWord(todayWord);
+                  setIsLoading(false);
+                }
+  
+            } else {
+              setWord(todayWord);
+              setIsLoading(false);
+            }
+          });
+        }
+      });      
   },[]);
   
   const [activeStep, setActiveStep] = React.useState(0);
@@ -100,16 +117,27 @@ export default function DailyTask() {
   }
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setIsNextDisabled(true);
+    
+    if(activeStep === steps.length - 1) {
+      handleCompletedTask(word.uid, currentUser.uid);
+    } else {
+      setIsNextDisabled(true);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  const handleCompletedTask = (wordUid, userUid) => {
+    const id = firebase.database().ref()
+      .child('completedTasks').push().key;
+    firebase.database().ref(`completedTasks/${id}`).set({
+      wordUid,
+      userUid,
+      date: Date.now()
+    });
+  }
   
   if(word && !isLoading){
     return (
@@ -152,9 +180,6 @@ export default function DailyTask() {
         {activeStep === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>All steps completed - you&apos;re finished</Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
-            </Button>
           </Paper>
         )}
       </div>
