@@ -17,10 +17,10 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-          <PrivateRoute exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/reset-password" component={ResetPassword} />
+          <PrivateRoute path="/" component={Home} />
       </Router>
     </AuthProvider>
   );

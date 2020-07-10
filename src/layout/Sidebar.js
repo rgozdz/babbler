@@ -11,6 +11,9 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import { useTheme } from '@material-ui/core/styles';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
+import AddTask from '../components/AddTask';
+import { Link, Redirect, withRouter } from "react-router-dom";
+
 
 function ResponsiveDrawer(props) {
   const { window, mobileOpen, classes } = props;
@@ -27,17 +30,19 @@ function ResponsiveDrawer(props) {
       <Divider />
       <List>
         {[
-          {text:'Daily task', icon: <NewReleasesIcon />},
-          // {text:'Weekly exams', icon: <SpellcheckIcon />}, 
+          {text:'Daily task', path:"/",icon: <NewReleasesIcon />},
+          {text:'Add task', path:"/add-task", icon: <SpellcheckIcon />}, 
           // {text:'Settings', icon: <SettingsIcon />}
         ].map((item, index) => (
+          <Link to={item.path} className={classes.link}>
           <ListItem button key={item.text}
             selected={selectedIndex === index}
             onClick={(event) => handleListItemClick(event, index)}
-          >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
+          >  
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />           
           </ListItem>
+          </Link>
         ))}
       </List>
       {/* <Divider /> */}

@@ -88,21 +88,20 @@ export default function DailyTask() {
                 uid: key,
               }));
           
-              console.log(todayWord);
               const completedTask = completedTasks.
                 find(task => task.userUid === currentUser.uid && task.wordUid === todayWord.uid);
           
                 if(!completedTask){
                   setWord(todayWord);
-                  setIsLoading(false);
                 }
   
             } else {
               setWord(todayWord);
-              setIsLoading(false);
             }
           });
         }
+        setIsLoading(false);
+
       });      
   },[]);
   
