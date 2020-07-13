@@ -1,19 +1,13 @@
 import React, { useCallback, useState } from "react";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 import Grid from "@material-ui/core/Grid";
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import { withRouter } from "react-router-dom";
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -21,6 +15,15 @@ import {
     KeyboardDatePicker,
   } from '@material-ui/pickers';
 import firebase from "../firebase";
+import TaskManagemantTable from './TaskManagmentTable';
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
+import Tooltip from '@material-ui/core/Tooltip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -49,19 +52,19 @@ const useStyles = makeStyles((theme) => ({
   },
   chipLabel: {
       marginTop: 16
+  },
+  fab: {
+    margin: theme.spacing(2),
+  },
+  absolute: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(3),
   }
 }));
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 async function writeTaskData(name, types, date, sentense) {
 
@@ -73,6 +76,7 @@ async function writeTaskData(name, types, date, sentense) {
 }
 
 const AddTask = ({ history }) => {
+
   const handleAddTask = useCallback(
     async (event) => {
       event.preventDefault();
@@ -80,7 +84,7 @@ const AddTask = ({ history }) => {
       try {
         
         writeTaskData(wordName.value, wordTypes.value.toString(), datePicker.value, exampleSentense.value );
-        history.push("");
+        setOpen(false);
       } catch (error) {
         alert(error);
       }
@@ -94,8 +98,16 @@ const AddTask = ({ history }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [typeNames, setTypeNames] = useState([]);
   const [sentense, setSentense] = useState("");
-
+  const [open, setOpen] = React.useState(false);
   const theme = useTheme();
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -137,23 +149,17 @@ const AddTask = ({ history }) => {
     };
   }
 
-  function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-    };
-    }
-
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Add new word
-        </Typography>
-        <form className={classes.form} onSubmit={handleAddTask}>
+    <div>
+       <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Add new word"}</DialogTitle>
+        <DialogContent>
+          <form className={classes.form} onSubmit={handleAddTask}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -235,8 +241,24 @@ const AddTask = ({ history }) => {
             Create
           </Button>
         </form>
-      </div>
-    </Container>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Dismiss
+          </Button>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+    <TaskManagemantTable></TaskManagemantTable>
+      <Tooltip title="Add" aria-label="add">
+        <Fab color="secondary" className={classes.absolute} onClick={handleClickOpen}>
+          <AddIcon />
+        </Fab>
+      </Tooltip>
+    </div>
   );
 };
 

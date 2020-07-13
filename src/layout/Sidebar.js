@@ -7,11 +7,12 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import SettingsIcon from '@material-ui/icons/Settings';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import { useTheme } from '@material-ui/core/styles';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
 import AddTask from '../components/AddTask';
+
 import { Link, Redirect, withRouter } from "react-router-dom";
 
 
@@ -31,7 +32,7 @@ function ResponsiveDrawer(props) {
       <List>
         {[
           {text:'Daily task', path:"/",icon: <NewReleasesIcon />},
-          {text:'Add task', path:"/add-task", icon: <SpellcheckIcon />}, 
+          {text:'Add task', path:"/add-task", icon: <PlaylistAddIcon />}, 
           // {text:'Settings', icon: <SettingsIcon />}
         ].map((item, index) => (
           <Link to={item.path} className={classes.link}>

@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import firebase from "../firebase";
 import { AuthContext } from "../Auth";
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,9 +101,9 @@ export default function DailyTask() {
             }
           });
         }
-        setIsLoading(false);
 
-      });      
+      })
+      .then(() => setIsLoading(false))      
   },[]);
   
   const [activeStep, setActiveStep] = React.useState(0);
@@ -190,9 +191,10 @@ export default function DailyTask() {
   }
 
   return(
-    <Typography variant="h2" component="h2">
+    <Alert severity="success">
+      <AlertTitle>Success</AlertTitle>
         All done for today!!!
-    </Typography>
+    </Alert>
   );
 
 }
