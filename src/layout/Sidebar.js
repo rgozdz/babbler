@@ -32,7 +32,7 @@ function ResponsiveDrawer(props) {
       <List>
         {[
           {text:'Daily task', path:"/",icon: <NewReleasesIcon />},
-          {text:'Add task', path:"/add-task", icon: <PlaylistAddIcon />}, 
+          {text:'Task managment', path:"/add-task", icon: <PlaylistAddIcon />}, 
           // {text:'Settings', icon: <SettingsIcon />}
         ].map((item, index) => (
           <Link to={item.path} className={classes.link}>

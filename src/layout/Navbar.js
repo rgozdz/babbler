@@ -10,6 +10,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import firebase from "../firebase";
 import Fade from '@material-ui/core/Fade';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { deepOrange } from '@material-ui/core/colors';
+import Avatar from '@material-ui/core/Avatar';
 
 const AppNavbar = ({classes, handleDrawerToggle}) =>{
   const [anchorEl, setAnchorEl] = useState(null);
@@ -32,20 +34,15 @@ const AppNavbar = ({classes, handleDrawerToggle}) =>{
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            edge="end"
+            edge="start"
             onClick={handleDrawerToggle}
             className={classes.menuButton}
           >
           <MenuIcon />
           </IconButton>
-          <IconButton
-            aria-label="more"
-            aria-controls="long-menu"
-            aria-haspopup="true"
-            onClick={handleClick}
-          >
-          <MoreVertIcon />
-          </IconButton>
+          <Chip clickable size="medium" color="secondary" label="Development version" />
+          
+          <Avatar alt="Remy Sharp" src="/broken-image.jpg" onClick={handleClick} className={classes.menu} />
           <Menu
               id="simple-menu"
               anchorEl={anchorEl}
@@ -55,7 +52,6 @@ const AppNavbar = ({classes, handleDrawerToggle}) =>{
             >
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
-          <Chip clickable size="medium" color="secondary" label="Dev version" />
         </Toolbar>
       </AppBar>
     )

@@ -22,7 +22,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
@@ -157,9 +156,9 @@ const AddTask = ({ history }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
+         <form className={classes.form} onSubmit={handleAddTask}>
         <DialogTitle id="alert-dialog-title">{"Add new word"}</DialogTitle>
         <DialogContent>
-          <form className={classes.form} onSubmit={handleAddTask}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -231,25 +230,16 @@ const AddTask = ({ history }) => {
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Create
-          </Button>
-        </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Dismiss
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button type="submit" color="primary" autoFocus>
             Create
           </Button>
         </DialogActions>
+        </form>
       </Dialog>
 
     <TaskManagemantTable></TaskManagemantTable>

@@ -9,10 +9,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
+    minWidth: 300,
   },
 });
 
@@ -44,8 +47,8 @@ export default function TaskManagment() {
           <TableHead>
             <TableRow>
               <TableCell>Word</TableCell>
-              <TableCell align="right">Date</TableCell>
               <TableCell align="right">Types</TableCell>
+              <TableCell align="right">Data</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -57,6 +60,14 @@ export default function TaskManagment() {
                 </TableCell>
                 <TableCell align="right">{row.types}</TableCell>
                 <TableCell align="right">{row.date}</TableCell>
+                <TableCell align="right">
+                <IconButton aria-label="edit">
+                    <EditOutlinedIcon />
+                </IconButton>
+                <IconButton aria-label="edit">
+                    <DeleteOutlinedIcon />
+                </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

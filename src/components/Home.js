@@ -26,7 +26,7 @@ const Home = () =>{
       },
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+      marginLeft: theme.spacing(2),
       [theme.breakpoints.up('sm')]: {
         display: 'none',
       },
@@ -43,6 +43,9 @@ const Home = () =>{
     link: {
       textDecoration: 'none',
       color: 'inherit'
+    }, 
+    menu: {
+      marginLeft: `calc(100% - ${drawerWidth}px)`,
     }
   }));
 

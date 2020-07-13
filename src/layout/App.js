@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {  } from "react";
 import "../App.scss";
 import Home from "../components/Home";
 import Login from "../components/Login";
@@ -6,9 +6,7 @@ import SignUp from "../components/SignUp";
 import ResetPassword from "../components/ResetPassword";
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
-  Redirect,
 } from "react-router-dom";
 import PrivateRoute from "../PrivateRoute";
 import { AuthProvider } from "../Auth";
