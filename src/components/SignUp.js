@@ -49,12 +49,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 async function writeUserData(userId, firstName, lastName, email) {
-  await firebase.database().ref('users/' + userId).set({
-    firstName,
-    lastName,
-    email,
-    //profile_picture : imageUrl
-  });
+  await firebase
+    .database()
+    .ref("users/" + userId)
+    .set({
+      firstName,
+      lastName,
+      email,
+      //profile_picture : imageUrl
+    });
 }
 
 const SignUp = ({ history }) => {
@@ -67,8 +70,8 @@ const SignUp = ({ history }) => {
           .auth()
           .createUserWithEmailAndPassword(email.value, password.value);
 
-          const uid = firebase.auth().currentUser.uid;
-          await writeUserData(uid,firstName.value, lastName.value, email.value );
+        const uid = firebase.auth().currentUser.uid;
+        await writeUserData(uid, firstName.value, lastName.value, email.value);
         history.push("");
       } catch (error) {
         alert(error);

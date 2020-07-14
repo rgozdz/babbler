@@ -1,34 +1,33 @@
-import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Navbar from '../layout/Navbar';
-import Sidebar from '../layout/Sidebar';
-import Page from '../layout/Page';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Navbar from "../layout/Navbar";
+import Sidebar from "../layout/Sidebar";
+import Page from "../layout/Page";
+import { makeStyles } from "@material-ui/core/styles";
 
-const Home = () =>{
-
+const Home = () => {
   const drawerWidth = 240;
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      display: 'flex',
+      display: "flex",
     },
     drawer: {
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up("sm")]: {
         width: drawerWidth,
         flexShrink: 0,
       },
     },
     appBar: {
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up("sm")]: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
       },
     },
     menuButton: {
       marginLeft: theme.spacing(2),
-      [theme.breakpoints.up('sm')]: {
-        display: 'none',
+      [theme.breakpoints.up("sm")]: {
+        display: "none",
       },
     },
     // necessary for content to be below app bar
@@ -41,32 +40,39 @@ const Home = () =>{
       padding: theme.spacing(3),
     },
     link: {
-      textDecoration: 'none',
-      color: 'inherit'
-    }, 
+      textDecoration: "none",
+      color: "inherit",
+    },
     menu: {
       marginLeft: `calc(100% - ${drawerWidth}px)`,
-    }
+    },
   }));
 
-    const classes = useStyles();
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+  const classes = useStyles();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-    const handleDrawerToggle = () => {
-      setMobileOpen(!mobileOpen);
-    };
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
-    return (
-        <div className={classes.root}>
-            <CssBaseline />
-            <Navbar classes={classes} handleDrawerToggle={handleDrawerToggle}></Navbar>
-            <Sidebar classes={classes} mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} ></Sidebar>
-            <main className={classes.content}>
-                <div className={classes.toolbar} />
-                <Page></Page>
-            </main>
-        </div>
-    )
- }
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <Navbar
+        classes={classes}
+        handleDrawerToggle={handleDrawerToggle}
+      ></Navbar>
+      <Sidebar
+        classes={classes}
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+      ></Sidebar>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        <Page></Page>
+      </main>
+    </div>
+  );
+};
 
-export default Home
+export default Home;

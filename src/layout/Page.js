@@ -1,16 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DailyTask from "../components/DailyTask";
-import AddTask from "../components/AddTask";
+import TaskManagement from "../components/TaskManagement";
 
 const Page = () => {
   return (
     <Switch>
-      <Route  exact path="/">
+      <Route exact path="/">
         <DailyTask />
       </Route>
       <Route path="/add-task">
-        <AddTask />
+        <TaskManagement />
       </Route>
     </Switch>
   );
