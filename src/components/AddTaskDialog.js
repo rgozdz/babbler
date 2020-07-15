@@ -71,7 +71,8 @@ async function writeTaskData(name, types, date, sentense) {
     .set({ name, types, date, sentense });
 }
 
-const AddTaskDialog = ({ isOpen }) => {
+const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
+
   useEffect(() => {
     setOpen(isOpen);
   }, [isOpen]);
@@ -92,6 +93,9 @@ const AddTaskDialog = ({ isOpen }) => {
         exampleSentense.value
       );
       setOpen(false);
+      handleSubmitDialog();
+      handleCloseDialog();
+
     } catch (error) {
       alert(error);
     }
@@ -108,6 +112,7 @@ const AddTaskDialog = ({ isOpen }) => {
 
   const handleClose = () => {
     setOpen(false);
+    handleCloseDialog();
   };
 
   const handleNameChange = (event) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
@@ -9,39 +9,50 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import NewReleasesIcon from "@material-ui/icons/NewReleases";
+import HistoryIcon from '@material-ui/icons/History';
 import { useTheme } from "@material-ui/core/styles";
-import SpellcheckIcon from "@material-ui/icons/Spellcheck";
-import TaskManagement from "../components/TaskManagement";
-
-import { Link, Redirect, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../Auth";
 
 function ResponsiveDrawer(props) {
   const { window, mobileOpen, classes } = props;
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { currentUser } = useContext(AuthContext);
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
+
+  const menuTabs = 
+  [
+    { text: "Daily task", path: "/", icon: <NewReleasesIcon /> },
+    {
+      text: "Task history",
+      path: "/history",
+      icon: <HistoryIcon />,
+    }
+  ];
+
+  //need to check if user has admin role
+  if(currentUser.uid === 'H0fbyudV3gfTG4221PfYK1Gg9zC3') {
+    menuTabs.push({
+      text: "Task managment",
+      path: "/add-task",
+      icon: <PlaylistAddIcon />,
+    })
+  }
 
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {[
-          { text: "Daily task", path: "/", icon: <NewReleasesIcon /> },
-          {
-            text: "Task managment",
-            path: "/add-task",
-            icon: <PlaylistAddIcon />,
-          },
-          // {text:'Settings', icon: <SettingsIcon />}
-        ].map((item, index) => (
-          <Link to={item.path} className={classes.link}>
+        {
+          menuTabs.map((item, index) => (
+          <Link to={item.path} key={item.text} className={classes.link}>
             <ListItem
               button
-              key={item.text}
               selected={selectedIndex === index}
               onClick={(event) => handleListItemClick(event, index)}
             >

@@ -41,7 +41,7 @@ function getSteps() {
 function getStepContent(step, word) {
   switch (step) {
     case 0:
-      return `${word.name} - ${word.type} Example sentense: ${word.sentense}`;
+      return `${word.name} - ${word.type} Example sentence: ${word.sentence}`;
     case 1:
       return "Write again";
     case 2:
@@ -126,10 +126,9 @@ export default function DailyTask() {
               } else {
                 setWord(todayWord);
               }
-            })
-            .finally(() => setIsLoading(false));
+            }).finally(() => setIsLoading(false));
         }
-      });
+      })
   }, []);
 
   const [activeStep, setActiveStep] = React.useState(0);

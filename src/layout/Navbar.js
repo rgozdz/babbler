@@ -4,13 +4,9 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Chip from "@material-ui/core/Chip";
-import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import firebase from "../firebase";
-import Fade from "@material-ui/core/Fade";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { deepOrange } from "@material-ui/core/colors";
 import Avatar from "@material-ui/core/Avatar";
 
 const AppNavbar = ({ classes, handleDrawerToggle }) => {
@@ -46,13 +42,15 @@ const AppNavbar = ({ classes, handleDrawerToggle }) => {
           color="secondary"
           label="Development version"
         />
-
-        <Avatar
-          alt="Remy Sharp"
-          src="/broken-image.jpg"
-          onClick={handleClick}
+        <IconButton 
+          aria-label="delete" 
           className={classes.menu}
-        />
+          onClick={handleClick}>
+          <Avatar
+            alt="Rafal"
+            src="/broken-image.jpg"
+          />
+        </IconButton>
         <Menu
           id="simple-menu"
           anchorEl={anchorEl}

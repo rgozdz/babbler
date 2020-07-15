@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -9,9 +9,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import IconButton from "@material-ui/core/IconButton";
+import { AuthContext } from "../Auth";
 
 const useStyles = makeStyles({
   table: {
@@ -19,9 +17,10 @@ const useStyles = makeStyles({
   },
 });
 
-export default function TaskTable({isFormSubmited}) {
+export default function HistoryTable() {
   const classes = useStyles();
   const [words, setWords] = useState(null);
+  const { currentUser } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,19 +29,50 @@ export default function TaskTable({isFormSubmited}) {
       .ref("/words/")
       .once("value")
       .then((snapshot) => {
-
         const words = snapshot.val();
+
         if (words) {
           const wordList = Object.keys(words).map((key) => ({
             ...words[key],
             uid: key
           }));
 
-          setWords(wordList);
-        }    
-      })
-      .finally(() => setIsLoading(false));
-  }, [isFormSubmited]);
+          return wordList;
+        }
+      }).then((wordList) => {
+        if (wordList) {
+          firebase
+            .database()
+            .ref("/completedTasks/")
+            .once("value")
+            .then((snapshot) => {
+              const completedTaskList = snapshot.val();
+              if (completedTaskList) {
+                const allCompletedTasks = Object.keys(completedTaskList).map(
+                  (key) => ({
+                    ...completedTaskList[key],
+                    uid: key,
+                  })
+                );
+
+                console.log(wordList);
+                const completedTasks = wordList.filter(
+                  (task) =>
+                    isCompleted(allCompletedTasks, task.uid)
+                );
+
+                setWords(completedTasks);
+
+            }})
+        }}).finally(() => setIsLoading(false));
+  }, []);
+
+  const isCompleted = (allCompletedTasks, taskUid) =>{
+    const completedTask = allCompletedTasks
+    .find(element => element.wordUid === taskUid && currentUser.uid === element.userUid);
+
+    return !!completedTask;
+  }
 
   if (!isLoading) {
     return (
@@ -52,8 +82,8 @@ export default function TaskTable({isFormSubmited}) {
             <TableRow>
               <TableCell>Word</TableCell>
               <TableCell align="right">Types</TableCell>
+              <TableCell align="right">Example sentence</TableCell>
               <TableCell align="right">Data</TableCell>
-              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -63,15 +93,8 @@ export default function TaskTable({isFormSubmited}) {
                   {row.name}
                 </TableCell>
                 <TableCell align="right">{row.types}</TableCell>
+                <TableCell align="right">{row.sentence}</TableCell>
                 <TableCell align="right">{row.date}</TableCell>
-                <TableCell align="right">
-                  <IconButton aria-label="edit">
-                    <EditOutlinedIcon />
-                  </IconButton>
-                  <IconButton aria-label="delete">
-                    <DeleteOutlinedIcon />
-                  </IconButton>
-                </TableCell>
               </TableRow>
             )): null}
           </TableBody>

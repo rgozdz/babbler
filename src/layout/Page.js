@@ -1,7 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import DailyTask from "../components/DailyTask";
 import TaskManagement from "../components/TaskManagement";
+import HistoryTable from "../components/HistoryTable";
 
 const Page = () => {
   return (
@@ -11,6 +12,9 @@ const Page = () => {
       </Route>
       <Route path="/add-task">
         <TaskManagement />
+      </Route>
+      <Route path="/history">
+        <HistoryTable />
       </Route>
     </Switch>
   );

@@ -8,8 +8,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddTaskDialog from "./AddTaskDialog";
 
 const useStyles = makeStyles((theme) => ({
-  absolute: {
-    position: "absolute",
+  fixed: {
+    position: "fixed",
     bottom: theme.spacing(2),
     right: theme.spacing(3),
   },
@@ -18,19 +18,32 @@ const useStyles = makeStyles((theme) => ({
 const TaskManagement = () => {
   const classes = useStyles();
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [isFormSubmited, setIsFormSubmited] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpenDialog(true);
   };
 
+  const handleCloseDialog= () => {
+    setOpenDialog(false);
+  };
+
+  const handleSubmitDialog= () => {
+    setIsFormSubmited(true);
+  };
+
   return (
     <div>
-      <AddTaskDialog isOpen={openDialog}></AddTaskDialog>
-      <TaskTable></TaskTable>
+      <AddTaskDialog 
+        isOpen={openDialog} 
+        handleSubmitDialog={() => handleSubmitDialog()} 
+        handleCloseDialog={() => handleCloseDialog()}>
+      </AddTaskDialog>
+      <TaskTable isFormSubmited={isFormSubmited}></TaskTable>
       <Tooltip title="Add" aria-label="add">
         <Fab
           color="secondary"
-          className={classes.absolute}
+          className={classes.fixed}
           onClick={handleClickOpen}
         >
           <AddIcon />
