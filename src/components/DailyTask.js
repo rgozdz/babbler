@@ -128,7 +128,7 @@ export default function DailyTask() {
               }
             }).finally(() => setIsLoading(false));
         }
-      })
+      }).finally(() => setIsLoading(false));
   }, []);
 
   const [activeStep, setActiveStep] = React.useState(0);
