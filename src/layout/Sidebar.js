@@ -13,6 +13,7 @@ import HistoryIcon from '@material-ui/icons/History';
 import { useTheme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../Auth";
+import Logo from "../components/Logo";
 
 function ResponsiveDrawer(props) {
   const { window, mobileOpen, classes } = props;
@@ -45,7 +46,7 @@ function ResponsiveDrawer(props) {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
+      <Logo size="small" logoStyle={classes.logo}></Logo>      
       <Divider />
       <List>
         {
