@@ -16,19 +16,6 @@ import Container from "@material-ui/core/Container";
 import { AuthContext } from "../Auth";
 import firebase from "../firebase";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <MaterialLink color="inherit" href="https://material-ui.com/">
-        aware4dev
-      </MaterialLink>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -119,12 +106,12 @@ const Login = ({ history }) => {
           >
             Log In
           </Button>
-          <Grid container>
-            <Grid item xs>
+          <Grid container justify="center">
+            {/* <Grid item xs>
               <MaterialLink href="/reset-password" variant="body2">
                 Forgot password?
               </MaterialLink>
-            </Grid>
+            </Grid> */}
             <Grid item>
               <MaterialLink href="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
@@ -141,3 +128,16 @@ const Login = ({ history }) => {
 };
 
 export default withRouter(Login);
+
+export const Copyright = () => {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © "}
+      <MaterialLink color="inherit" href="https://github.com/rgozdz/">
+        aware4dev
+      </MaterialLink>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}

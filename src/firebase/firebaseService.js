@@ -18,19 +18,35 @@ export const getAllWords = () => {
             }));
             resolve(wordList);
           }
+          
+          resolve([]);
         })
     })
     
     return allWordsPromise;
 }
 
+export const deleteWord = (uid) => {
+
+  let deletedWordPromise = new Promise((resolve) => {
+    firebase
+    .database()
+    .ref(`/words/${uid}`)
+    .remove()
+    .then(() => resolve("word deleted"))
+})
+
+  return deletedWordPromise;
+}
+
 export const getDailyWord = (currentUser) => {
 
-    let dailyWordPromise = new Promise((resolve, reject) => {
+    let dailyWordPromise = new Promise((resolve) => {
         getAllWords()
         .then((allWords) => {
   
             const dailyWord = allWords.find(isToday);
+            
             return dailyWord;
         })
         .then((todayWord) => {
@@ -57,12 +73,18 @@ export const getDailyWord = (currentUser) => {
     
                     if (!completedTask) {
                       resolve(todayWord);
+                    } else {
+                      resolve(null);
                     }
+                    
                   } else {
                     resolve(todayWord);
                   }
                 })
+            } else {
+              resolve(null);
             }
+
         })
     })
 
@@ -71,7 +93,7 @@ export const getDailyWord = (currentUser) => {
 
 export const getUserTasksHistory = (currentUser) => {
 
-  let dailyWordPromise = new Promise((resolve, reject) => {
+  let dailyWordPromise = new Promise((resolve) => {
     getAllWords()
     .then((wordList) => {
       if (wordList) {
@@ -95,8 +117,9 @@ export const getUserTasksHistory = (currentUser) => {
               );
 
               resolve(completedTasks);
-          }})
-
+          }
+          resolve(null);
+        })
         }})
   })
 

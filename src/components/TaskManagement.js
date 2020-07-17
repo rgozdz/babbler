@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import TaskTable from "./TasksTable";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddTaskDialog from "./AddTaskDialog";
+import {getAllWords} from "../firebase/firebaseService";
 
 const useStyles = makeStyles((theme) => ({
   fixed: {
@@ -17,29 +19,37 @@ const useStyles = makeStyles((theme) => ({
 
 const TaskManagement = () => {
   const classes = useStyles();
+  const [words, setWords] = useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [isFormSubmited, setIsFormSubmited] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getAllWords()
+    .then(words => setWords(words))
+      .finally(() => setIsLoading(false));
+  }, []);
+  
+
+  const updateTasksTab = () => {
+    getAllWords()
+    .then(words => setWords(words));
+  }
 
   const handleClickOpen = () => {
     setOpenDialog(true);
   };
 
-  const handleCloseDialog= () => {
+  const handleCloseDialog = () => {
     setOpenDialog(false);
-  };
-
-  const handleSubmitDialog= () => {
-    setIsFormSubmited(true);
   };
 
   return (
     <div>
-      <AddTaskDialog 
-        isOpen={openDialog} 
-        handleSubmitDialog={() => handleSubmitDialog()} 
-        handleCloseDialog={() => handleCloseDialog()}>
-      </AddTaskDialog>
-      <TaskTable isFormSubmited={isFormSubmited}></TaskTable>
+      {isLoading? 
+      <CircularProgress color="secondary" />: 
+      <TaskTable words={words} updateTasksTab={() => updateTasksTab()}></TaskTable>
+      }
+
       <Tooltip title="Add" aria-label="add">
         <Fab
           color="secondary"
@@ -49,6 +59,12 @@ const TaskManagement = () => {
           <AddIcon />
         </Fab>
       </Tooltip>
+
+      <AddTaskDialog 
+        isOpen={openDialog} 
+        updateTasksTab={() => updateTasksTab()}
+        handleCloseDialog={() => handleCloseDialog()}>
+      </AddTaskDialog>
     </div>
   );
 };

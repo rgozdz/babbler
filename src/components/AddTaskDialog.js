@@ -19,6 +19,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -71,7 +73,17 @@ async function writeTaskData(name, types, date, sentence) {
     .set({ name, types, date, sentence });
 }
 
-const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
+const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab }) => {
+  
+  const classes = useStyles();
+  const theme = useTheme();
+  
+  const [name, setName] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [typeNames, setTypeNames] = useState([]);
+  const [sentence, setSentence] = useState("");
+  const [open, setOpen] = React.useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     setOpen(isOpen);
@@ -93,27 +105,28 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
         exampleSentence.value
       );
       setOpen(false);
-      handleSubmitDialog();
+      updateTasksTab();
+      resetForm();
       handleCloseDialog();
+      handleShowNotification();
 
     } catch (error) {
       alert(error);
     }
   }, []);
 
-  const classes = useStyles();
-
-  const [name, setName] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [typeNames, setTypeNames] = useState([]);
-  const [sentence, setSentence] = useState("");
-  const [open, setOpen] = React.useState(false);
-  const theme = useTheme();
-
   const handleClose = () => {
     setOpen(false);
+    resetForm();
     handleCloseDialog();
   };
+
+  const resetForm = () => {
+    setName("");
+    setTypeNames([]);
+    setSelectedDate(new Date());
+    setSentence("");
+  }
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -131,7 +144,19 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
     setSentence(event.target.value);
   };
 
-  const names = ["Noun", "Verb", "Adjective"];
+  const handleShowNotification = () => {
+    setShowNotification(true);
+  };
+
+  const handleCloseNotify = (reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShowNotification(false);
+  };
+
+  const names = ["noun", "verb", "adjective"];
 
   const MenuProps = {
     PaperProps: {
@@ -151,7 +176,12 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
     };
   }
 
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
   return (
+    <div>
     <Dialog
       open={open}
       onClose={handleClose}
@@ -256,6 +286,14 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
         </DialogActions>
       </form>
     </Dialog>
+
+      <Snackbar open={showNotification} autoHideDuration={6000} onClose={handleCloseNotify}>
+      <Alert onClose={handleCloseNotify} severity="success">
+        Task was created!
+      </Alert>
+    </Snackbar>
+    </div>
+
   );
 };
 

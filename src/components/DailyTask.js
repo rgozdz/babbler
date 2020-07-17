@@ -28,6 +28,16 @@ const useStyles = makeStyles((theme) => ({
   resetContainer: {
     padding: theme.spacing(3),
   },
+  sentense: {
+    opacity: 0.6
+  },
+  wordName: {
+    fontSize: "1.5em",
+    fontWeight: "bolder"
+  },
+  wordType: {
+    fontStyle: "italic"
+  }
 }));
 
 function getSteps() {
@@ -37,21 +47,6 @@ function getSteps() {
     "Write again",
     "And the last time",
   ];
-}
-
-function getStepContent(step, word) {
-  switch (step) {
-    case 0:
-      return `${word.name} - ${word.type} Example sentence: ${word.sentence}`;
-    case 1:
-      return "Write again";
-    case 2:
-      return `Just to remember`;
-    case 3:
-      return `Last time, promiss`;
-    default:
-      return "Unknown step";
-  }
 }
 
 export default function DailyTask() {
@@ -99,6 +94,24 @@ export default function DailyTask() {
       date: Date.now(),
     });
   };
+
+  function getStepContent(step, word) {
+    switch (step) {
+      case 0:
+        return <div><p className={classes.wordName}>{word.name}</p>
+                    <p className={classes.wordType}>{word.types}</p>
+                    <p className={classes.sentense}>{word.sentence}</p>
+                </div>;
+      case 1:
+        return "Write again";
+      case 2:
+        return `Just to remember`;
+      case 3:
+        return `Last time, promiss`;
+      default:
+        return "Unknown step";
+    }
+  }
 
   if (word && !isLoading) {
     return (
