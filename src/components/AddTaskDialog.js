@@ -62,13 +62,13 @@ const useStyles = makeStyles((theme) => ({
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
-async function writeTaskData(name, types, date, sentense) {
+async function writeTaskData(name, types, date, sentence) {
   const id = firebase.database().ref().child("words").push().key;
 
   await firebase
     .database()
     .ref(`words/${id}`)
-    .set({ name, types, date, sentense });
+    .set({ name, types, date, sentence });
 }
 
 const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
@@ -83,14 +83,14 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
       wordName,
       datePicker,
       wordTypes,
-      exampleSentense,
+      exampleSentence,
     } = event.target.elements;
     try {
       writeTaskData(
         wordName.value,
         wordTypes.value.toString(),
         datePicker.value,
-        exampleSentense.value
+        exampleSentence.value
       );
       setOpen(false);
       handleSubmitDialog();
@@ -106,7 +106,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
   const [name, setName] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [typeNames, setTypeNames] = useState([]);
-  const [sentense, setSentense] = useState("");
+  const [sentence, setSentence] = useState("");
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
 
@@ -127,8 +127,8 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
     setTypeNames(event.target.value);
   };
 
-  const handleSentenseChange = (event) => {
-    setSentense(event.target.value);
+  const handleSentenceChange = (event) => {
+    setSentence(event.target.value);
   };
 
   const names = ["Noun", "Verb", "Adjective"];
@@ -236,12 +236,12 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, handleSubmitDialog }) => {
                 variant="outlined"
                 required
                 fullWidth
-                value={sentense}
-                onChange={handleSentenseChange}
-                name="exampleSentense"
-                label="Sentense"
-                id="sentense"
-                autoComplete="sentense"
+                value={sentence}
+                onChange={handleSentenceChange}
+                name="exampleSentence"
+                label="Sentence"
+                id="sentence"
+                autoComplete="sentence"
               />
             </Grid>
           </Grid>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import firebase from "../firebase";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -10,6 +9,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { AuthContext } from "../Auth";
+import { getUserTasksHistory }  from "../firebase/firebaseService";
 
 const useStyles = makeStyles({
   table: {
@@ -24,55 +24,10 @@ export default function HistoryTable() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    firebase
-      .database()
-      .ref("/words/")
-      .once("value")
-      .then((snapshot) => {
-        const words = snapshot.val();
-
-        if (words) {
-          const wordList = Object.keys(words).map((key) => ({
-            ...words[key],
-            uid: key
-          }));
-
-          return wordList;
-        }
-      }).then((wordList) => {
-        if (wordList) {
-          firebase
-            .database()
-            .ref("/completedTasks/")
-            .once("value")
-            .then((snapshot) => {
-              const completedTaskList = snapshot.val();
-              if (completedTaskList) {
-                const allCompletedTasks = Object.keys(completedTaskList).map(
-                  (key) => ({
-                    ...completedTaskList[key],
-                    uid: key,
-                  })
-                );
-
-                console.log(wordList);
-                const completedTasks = wordList.filter(
-                  (task) =>
-                    isCompleted(allCompletedTasks, task.uid)
-                );
-
-                setWords(completedTasks);
-
-            }})
-        }}).finally(() => setIsLoading(false));
+    getUserTasksHistory(currentUser)
+      .then(userTasks => setWords(userTasks))
+      .finally(() => setIsLoading(false));
   }, []);
-
-  const isCompleted = (allCompletedTasks, taskUid) =>{
-    const completedTask = allCompletedTasks
-    .find(element => element.wordUid === taskUid && currentUser.uid === element.userUid);
-
-    return !!completedTask;
-  }
 
   if (!isLoading) {
     return (

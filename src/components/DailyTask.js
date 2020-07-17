@@ -12,6 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import firebase from "../firebase";
 import { AuthContext } from "../Auth";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { getDailyWord } from "../firebase/firebaseService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,25 +54,6 @@ function getStepContent(step, word) {
   }
 }
 
-function isToday(element) {
-  let date = new Date();
-  const dateTimeFormat = new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-  const [
-    { value: month },
-    ,
-    { value: day },
-    ,
-    { value: year },
-  ] = dateTimeFormat.formatToParts(date);
-  const today = `${day}-${month}-${year}`;
-
-  return element.date === today;
-}
-
 export default function DailyTask() {
   const classes = useStyles();
   const [word, setWord] = useState(null);
@@ -80,55 +62,9 @@ export default function DailyTask() {
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    firebase
-      .database()
-      .ref("/words/")
-      .once("value")
-      .then((snapshot) => {
-        const words = snapshot.val();
-
-        if (words) {
-          const todayWord = Object.keys(words)
-            .map((key) => ({
-              ...words[key],
-              uid: key,
-            }))
-            .find(isToday);
-
-          return todayWord;
-        }
-      })
-      .then((todayWord) => {
-        if (todayWord) {
-          firebase
-            .database()
-            .ref("/completedTasks/")
-            .once("value")
-            .then((snapshot) => {
-              const completedTaskList = snapshot.val();
-              if (completedTaskList) {
-                const completedTasks = Object.keys(completedTaskList).map(
-                  (key) => ({
-                    ...completedTaskList[key],
-                    uid: key,
-                  })
-                );
-
-                const completedTask = completedTasks.find(
-                  (task) =>
-                    task.userUid === currentUser.uid &&
-                    task.wordUid === todayWord.uid
-                );
-
-                if (!completedTask) {
-                  setWord(todayWord);
-                }
-              } else {
-                setWord(todayWord);
-              }
-            }).finally(() => setIsLoading(false));
-        }
-      }).finally(() => setIsLoading(false));
+    getDailyWord(currentUser)
+      .then(dailyWord => setWord(dailyWord))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const [activeStep, setActiveStep] = React.useState(0);

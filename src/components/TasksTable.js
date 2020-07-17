@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import firebase from "../firebase";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -12,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import IconButton from "@material-ui/core/IconButton";
+import {getAllWords} from "../firebase/firebaseService";
 
 const useStyles = makeStyles({
   table: {
@@ -25,22 +25,8 @@ export default function TaskTable({isFormSubmited}) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    firebase
-      .database()
-      .ref("/words/")
-      .once("value")
-      .then((snapshot) => {
-
-        const words = snapshot.val();
-        if (words) {
-          const wordList = Object.keys(words).map((key) => ({
-            ...words[key],
-            uid: key
-          }));
-
-          setWords(wordList);
-        }    
-      })
+    getAllWords()
+    .then(words => setWords(words))
       .finally(() => setIsLoading(false));
   }, [isFormSubmited]);
 
