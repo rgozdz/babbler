@@ -8,6 +8,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import firebase from "../firebase";
 import Avatar from "@material-ui/core/Avatar";
+import FaceTwoToneIcon from '@material-ui/icons/FaceTwoTone';
 
 const AppNavbar = ({ classes, handleDrawerToggle }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -46,10 +47,11 @@ const AppNavbar = ({ classes, handleDrawerToggle }) => {
           aria-label="delete" 
           className={classes.menu}
           onClick={handleClick}>
-          <Avatar
+          {/* <Avatar
             alt="Rafal"
             src="/broken-image.jpg"
-          />
+          /> */}
+          <FaceTwoToneIcon></FaceTwoToneIcon>
         </IconButton>
         <Menu
           id="simple-menu"
