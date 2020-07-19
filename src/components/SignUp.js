@@ -14,7 +14,6 @@ import firebase from "../firebase";
 import Logo from "./Logo";
 import { Copyright } from "./Login";
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -136,7 +135,7 @@ const SignUp = ({ history }) => {
           </Button>
           <Grid container justify="center">
             <Grid item>
-              <MaterialLink href="/login" variant="body2">
+              <MaterialLink href="/#/login" variant="body2">
                 Already have an account? Sign in
               </MaterialLink>
             </Grid>

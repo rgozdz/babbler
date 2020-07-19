@@ -112,7 +112,7 @@ const Login = ({ history }) => {
               </MaterialLink>
             </Grid> */}
             <Grid item>
-              <MaterialLink href="/signup" variant="body2">
+              <MaterialLink href="/#/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </MaterialLink>
             </Grid>
@@ -139,4 +139,4 @@ export const Copyright = () => {
       {"."}
     </Typography>
   );
-}
+};

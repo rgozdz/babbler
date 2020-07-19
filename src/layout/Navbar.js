@@ -37,14 +37,8 @@ const AppNavbar = ({ classes, handleDrawerToggle }) => {
         >
           <MenuIcon />
         </IconButton>
-        {process.env.NODE_ENV === "development" ? (
-          <Chip
-            clickable
-            size="medium"
-            color="secondary"
-            label="Development version"
-          />
-        ) : null}
+
+        <Chip clickable size="medium" color="secondary" label="Beta version" />
 
         <IconButton
           aria-label="delete"

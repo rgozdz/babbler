@@ -29,15 +29,15 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   sentense: {
-    opacity: 0.6
+    opacity: 0.6,
   },
   wordName: {
     fontSize: "1.5em",
-    fontWeight: "bolder"
+    fontWeight: "bolder",
   },
   wordType: {
-    fontStyle: "italic"
-  }
+    fontStyle: "italic",
+  },
 }));
 
 function getSteps() {
@@ -58,7 +58,7 @@ export default function DailyTask() {
 
   useEffect(() => {
     getDailyWord(currentUser)
-      .then(dailyWord => setWord(dailyWord))
+      .then((dailyWord) => setWord(dailyWord))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -98,10 +98,13 @@ export default function DailyTask() {
   function getStepContent(step, word) {
     switch (step) {
       case 0:
-        return <div><p className={classes.wordName}>{word.name}</p>
-                    <p className={classes.wordType}>{word.types}</p>
-                    <p className={classes.sentense}>{word.sentence}</p>
-                </div>;
+        return (
+          <div>
+            <p className={classes.wordName}>{word.name}</p>
+            <p className={classes.wordType}>{word.types}</p>
+            <p className={classes.sentense}>{word.sentence}</p>
+          </div>
+        );
       case 1:
         return "Write again";
       case 2:

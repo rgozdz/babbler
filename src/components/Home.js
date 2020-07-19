@@ -44,14 +44,14 @@ const Home = () => {
       color: "inherit",
     },
     menu: {
-      marginLeft: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: `calc(105% - ${drawerWidth}px)`,
     },
     logo: {
       position: "relative",
       left: "50%",
       top: "50%",
-      transform: "translate(-50%,10%)"
-    }
+      transform: "translate(-50%,10%)",
+    },
   }));
 
   const classes = useStyles();
