@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/babbler/static/css/main.69b2e544.chunk.css",
-    "main.js": "/babbler/static/js/main.a37cddd7.chunk.js",
-    "main.js.map": "/babbler/static/js/main.a37cddd7.chunk.js.map",
+    "main.js": "/babbler/static/js/main.f0146267.chunk.js",
+    "main.js.map": "/babbler/static/js/main.f0146267.chunk.js.map",
     "runtime-main.js": "/babbler/static/js/runtime-main.07fc5397.js",
     "runtime-main.js.map": "/babbler/static/js/runtime-main.07fc5397.js.map",
-    "static/js/2.b9adaca6.chunk.js": "/babbler/static/js/2.b9adaca6.chunk.js",
-    "static/js/2.b9adaca6.chunk.js.map": "/babbler/static/js/2.b9adaca6.chunk.js.map",
+    "static/js/2.e41d1eb5.chunk.js": "/babbler/static/js/2.e41d1eb5.chunk.js",
+    "static/js/2.e41d1eb5.chunk.js.map": "/babbler/static/js/2.e41d1eb5.chunk.js.map",
     "index.html": "/babbler/index.html",
-    "precache-manifest.14be4a70d1c8a92c2230846fa8b7f76f.js": "/babbler/precache-manifest.14be4a70d1c8a92c2230846fa8b7f76f.js",
+    "precache-manifest.a41025c050a9638297d300c91e4a1633.js": "/babbler/precache-manifest.a41025c050a9638297d300c91e4a1633.js",
     "service-worker.js": "/babbler/service-worker.js",
     "static/css/main.69b2e544.chunk.css.map": "/babbler/static/css/main.69b2e544.chunk.css.map",
-    "static/js/2.b9adaca6.chunk.js.LICENSE.txt": "/babbler/static/js/2.b9adaca6.chunk.js.LICENSE.txt",
+    "static/js/2.e41d1eb5.chunk.js.LICENSE.txt": "/babbler/static/js/2.e41d1eb5.chunk.js.LICENSE.txt",
     "static/media/logo.png": "/babbler/static/media/logo.f5ceec72.png"
   },
   "entrypoints": [
     "static/js/runtime-main.07fc5397.js",
-    "static/js/2.b9adaca6.chunk.js",
+    "static/js/2.e41d1eb5.chunk.js",
     "static/css/main.69b2e544.chunk.css",
-    "static/js/main.a37cddd7.chunk.js"
+    "static/js/main.f0146267.chunk.js"
   ]
 }
