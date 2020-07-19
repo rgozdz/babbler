@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2033bcdc4006560d7d692c855fd5cb38",
+    "revision": "6758f470090c69708df432e867463827",
     "url": "/babbler/index.html"
   },
   {
-    "revision": "d048397abcdbdee18233",
+    "revision": "a1d9034e5dfc7a9205f9",
     "url": "/babbler/static/css/main.69b2e544.chunk.css"
   },
   {
-    "revision": "1b94fb28cad0c6a61128",
-    "url": "/babbler/static/js/2.3bc83db4.chunk.js"
+    "revision": "6725810c3b0861876085",
+    "url": "/babbler/static/js/2.57776545.chunk.js"
   },
   {
     "revision": "16e72e8a7b17b4817847b2ca58cd85b3",
-    "url": "/babbler/static/js/2.3bc83db4.chunk.js.LICENSE.txt"
+    "url": "/babbler/static/js/2.57776545.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d048397abcdbdee18233",
-    "url": "/babbler/static/js/main.dab35a8c.chunk.js"
+    "revision": "a1d9034e5dfc7a9205f9",
+    "url": "/babbler/static/js/main.769bbd2a.chunk.js"
   },
   {
     "revision": "8b434f4d47be21b7333a",
