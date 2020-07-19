@@ -66,6 +66,7 @@ const SignUp = ({ history }) => {
     [history]
   );
   const classes = useStyles();
+  const loginUrl = `${process.env.PUBLIC_URL}/#/login`;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -135,7 +136,7 @@ const SignUp = ({ history }) => {
           </Button>
           <Grid container justify="center">
             <Grid item>
-              <MaterialLink href="/#/login" variant="body2">
+              <MaterialLink href={loginUrl} variant="body2">
                 Already have an account? Sign in
               </MaterialLink>
             </Grid>

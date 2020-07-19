@@ -56,6 +56,7 @@ const Login = ({ history }) => {
 
   const classes = useStyles();
   const { currentUser } = useContext(AuthContext);
+  const signUpUrl = `${process.env.PUBLIC_URL}/#/signup`;
 
   if (currentUser) {
     return <Redirect to="/" />;
@@ -112,7 +113,7 @@ const Login = ({ history }) => {
               </MaterialLink>
             </Grid> */}
             <Grid item>
-              <MaterialLink href="/#/signup" variant="body2">
+              <MaterialLink href={signUpUrl} variant="body2">
                 {"Don't have an account? Sign Up"}
               </MaterialLink>
             </Grid>
