@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/babbler/static/css/main.69b2e544.chunk.css",
-    "main.js": "/babbler/static/js/main.769bbd2a.chunk.js",
-    "main.js.map": "/babbler/static/js/main.769bbd2a.chunk.js.map",
+    "main.js": "/babbler/static/js/main.31cb6e71.chunk.js",
+    "main.js.map": "/babbler/static/js/main.31cb6e71.chunk.js.map",
     "runtime-main.js": "/babbler/static/js/runtime-main.07fc5397.js",
     "runtime-main.js.map": "/babbler/static/js/runtime-main.07fc5397.js.map",
     "static/js/2.57776545.chunk.js": "/babbler/static/js/2.57776545.chunk.js",
     "static/js/2.57776545.chunk.js.map": "/babbler/static/js/2.57776545.chunk.js.map",
     "index.html": "/babbler/index.html",
-    "precache-manifest.dfac9ee456e58190e8d83b03b48fe0bb.js": "/babbler/precache-manifest.dfac9ee456e58190e8d83b03b48fe0bb.js",
+    "precache-manifest.4e5b7040d5729c5b991d8f1d76f674bb.js": "/babbler/precache-manifest.4e5b7040d5729c5b991d8f1d76f674bb.js",
     "service-worker.js": "/babbler/service-worker.js",
     "static/css/main.69b2e544.chunk.css.map": "/babbler/static/css/main.69b2e544.chunk.css.map",
     "static/js/2.57776545.chunk.js.LICENSE.txt": "/babbler/static/js/2.57776545.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.07fc5397.js",
     "static/js/2.57776545.chunk.js",
     "static/css/main.69b2e544.chunk.css",
-    "static/js/main.769bbd2a.chunk.js"
+    "static/js/main.31cb6e71.chunk.js"
   ]
 }
