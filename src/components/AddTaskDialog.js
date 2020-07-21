@@ -212,7 +212,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab }) => {
                   margin="normal"
                   id="date-picker-dialog"
                   label="Word for day"
-                  format="dd-MM-yyyy"
+                  format="yyyy-MM-dd"
                   value={selectedDate}
                   name="datePicker"
                   onChange={handleDateChange}

@@ -140,7 +140,7 @@ const isToday = (element) =>{
       ,
       { value: year },
     ] = dateTimeFormat.formatToParts(date);
-    const today = `${day}-${month}-${year}`;
+    const today = `${year}-${month}-${day}`;
   
     return element.date === today;
 }

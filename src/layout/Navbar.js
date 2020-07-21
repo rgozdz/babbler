@@ -40,9 +40,9 @@ const AppNavbar = ({ classes, handleDrawerToggle }) => {
 
         <Chip clickable size="medium" color="secondary" label="Beta version" />
 
+        <div className={classes.menu}>
         <IconButton
           aria-label="delete"
-          className={classes.menu}
           onClick={handleClick}
         >
           {/* <Avatar
@@ -51,6 +51,8 @@ const AppNavbar = ({ classes, handleDrawerToggle }) => {
           /> */}
           <FaceTwoToneIcon></FaceTwoToneIcon>
         </IconButton>
+        </div>
+
         <Menu
           id="simple-menu"
           anchorEl={anchorEl}

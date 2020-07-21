@@ -99,11 +99,11 @@ export default function DailyTask() {
     switch (step) {
       case 0:
         return (
-          <div>
-            <p className={classes.wordName}>{word.name}</p>
-            <p className={classes.wordType}>{word.types}</p>
-            <p className={classes.sentense}>{word.sentence}</p>
-          </div>
+          <>
+            <span className={classes.wordName}>{word.name}</span><br/>
+            <span className={classes.wordType}>{word.types}</span><br/><br/>
+            <span className={classes.sentense}>{word.sentence}</span>
+          </>
         );
       case 1:
         return "Write again";
