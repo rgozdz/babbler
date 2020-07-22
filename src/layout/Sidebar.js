@@ -14,6 +14,7 @@ import { useTheme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../Auth";
 import Logo from "../components/Logo";
+import Footer from "./Footer";
 
 function ResponsiveDrawer(props) {
   const { window, mobileOpen, classes } = props;
@@ -88,6 +89,7 @@ function ResponsiveDrawer(props) {
           }}
         >
           {drawer}
+          <Footer></Footer>
         </Drawer>
       </Hidden>
       <Hidden xsDown implementation="css">
@@ -99,6 +101,7 @@ function ResponsiveDrawer(props) {
           open
         >
           {drawer}
+          <Footer></Footer>
         </Drawer>
       </Hidden>
     </nav>
