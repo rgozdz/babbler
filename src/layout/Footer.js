@@ -55,8 +55,8 @@ export default function Footer() {
   return (
     <footer className={classes.footer}>
       <Container maxWidth="sm">
-        <Typography variant="body1">
-          Babbler ver. {version}
+        <Typography variant="caption">
+          Babbler ver. <br/> {version}
         </Typography>
         <Copyright />
       </Container>
