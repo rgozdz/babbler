@@ -65,6 +65,12 @@ export default function TaskTable({words, updateTasksTab}) {
     setShowNotification(false);
   };
 
+  const getTimeStamp = (date) => {
+   const rawDate = new Date(date);
+   console.log(rawDate.getTime())
+    return rawDate.getTime();
+}
+
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -90,12 +96,15 @@ export default function TaskTable({words, updateTasksTab}) {
                 <TableCell align="right">{row.types}</TableCell>
                 <TableCell align="right">{row.date}</TableCell>
                 <TableCell align="right">
+                  {getTimeStamp(row.date) > getTimeStamp(new Date())?
+                  <>
                   <IconButton aria-label="edit">
                     <EditOutlinedIcon />
                   </IconButton>
                   <IconButton aria-label="delete" onClick={() => handleClickOpen(row)}>
                     <DeleteOutlinedIcon />
-                  </IconButton>
+                  </IconButton></> : null }
+                  
                 </TableCell>
               </TableRow>
             )): null}

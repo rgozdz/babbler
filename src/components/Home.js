@@ -44,7 +44,9 @@ const Home = () => {
       color: "inherit",
     },
     menu: {
-      marginLeft: `calc(105% - ${drawerWidth}px)`,
+      flexGrow: 1,
+      display: "flex",
+      justifyContent: "flex-end"
     },
     logo: {
       position: "relative",
