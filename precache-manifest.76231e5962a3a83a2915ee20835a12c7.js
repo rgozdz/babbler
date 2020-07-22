@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7765a7b3da28aac31f9f5270e074a1a2",
+    "revision": "d31339e34a0b2f717244482417251068",
     "url": "/babbler/index.html"
   },
   {
-    "revision": "3e8b628164d8804da819",
+    "revision": "6c3ae7d0cfa61c7b3a9f",
     "url": "/babbler/static/css/main.4abf37c0.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/babbler/static/js/2.a7063c8b.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "3e8b628164d8804da819",
-    "url": "/babbler/static/js/main.80f90d0c.chunk.js"
+    "revision": "6c3ae7d0cfa61c7b3a9f",
+    "url": "/babbler/static/js/main.0b32280d.chunk.js"
   },
   {
     "revision": "8b434f4d47be21b7333a",
@@ -28,7 +28,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/babbler/static/media/logo.f5ceec72.png"
   },
   {
-    "revision": "fd77380b5817d59568b051f72bc00040",
-    "url": "/babbler/static/media/version.fd77380b.bin"
+    "revision": "75effc17946ae19855ac3686544169c9",
+    "url": "/babbler/static/media/version.75effc17.bin"
   }
 ]);
