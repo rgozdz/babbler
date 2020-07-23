@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) =>  ({
   })
 );
 
-export default function TaskTable({words, updateTasksTab}) {
+export default function TaskTable({words, updateTasksTab, handleOpenEditTask}) {
   const classes = useStyles();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
@@ -40,6 +40,11 @@ export default function TaskTable({words, updateTasksTab}) {
     setOpenDeleteDialog(true);
   };
 
+  const handleClickEditDialog = (word) => {
+    setSelectedWord(word);
+    handleOpenEditTask(word)
+  };
+  
   const handleClose = () => {
     setOpenDeleteDialog(false);
   };
@@ -67,7 +72,6 @@ export default function TaskTable({words, updateTasksTab}) {
 
   const getTimeStamp = (date) => {
    const rawDate = new Date(date);
-   console.log(rawDate.getTime())
     return rawDate.getTime();
 }
 
@@ -98,7 +102,7 @@ export default function TaskTable({words, updateTasksTab}) {
                 <TableCell align="right">
                   {getTimeStamp(row.date) > getTimeStamp(new Date())?
                   <>
-                  <IconButton aria-label="edit">
+                  <IconButton aria-label="edit" onClick={() => handleClickEditDialog(row)}>
                     <EditOutlinedIcon />
                   </IconButton>
                   <IconButton aria-label="delete" onClick={() => handleClickOpen(row)}>

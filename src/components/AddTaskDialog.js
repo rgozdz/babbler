@@ -22,6 +22,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useEffect } from "react";
+import { setDate } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -64,16 +65,7 @@ const useStyles = makeStyles((theme) => ({
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
-async function writeTaskData(name, types, date, sentence) {
-  const id = firebase.database().ref().child("words").push().key;
-
-  await firebase
-    .database()
-    .ref(`words/${id}`)
-    .set({ name, types, date, sentence });
-}
-
-const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab }) => {
+const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
   
   const classes = useStyles();
   const theme = useTheme();
@@ -84,10 +76,15 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab }) => {
   const [sentence, setSentence] = useState("");
   const [open, setOpen] = React.useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [selectedWord, setSelectedWord] = useState({});
 
   useEffect(() => {
+    setSelectedWord(word);
+    if(word) {
+      setFormData(word);
+    }
     setOpen(isOpen);
-  }, [isOpen]);
+  }, [isOpen, word]);
 
   const handleAddTask = useCallback(async (event) => {
     event.preventDefault();
@@ -98,6 +95,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab }) => {
       exampleSentence,
     } = event.target.elements;
     try {
+      
       writeTaskData(
         wordName.value,
         wordTypes.value.toString(),
@@ -115,12 +113,31 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab }) => {
     }
   }, []);
 
+  async function writeTaskData(name, types, date, sentence) {
+
+    console.log(`tu ${word}`)
+    const id = selectedWord
+      ? selectedWord.uid 
+      : firebase.database().ref().child("words").push().key;
+  
+    // await firebase
+    //   .database()
+    //   .ref(`words/${id}`)
+    //   .set({ name, types, date, sentence });
+  }
+
   const handleClose = () => {
     setOpen(false);
     resetForm();
     handleCloseDialog();
   };
 
+  const setFormData = (word) => {
+    setName(word.name);
+    setSelectedDate(word.date);
+    setTypeNames(word.types.split(','));
+    setSentence(word.sentence);
+  }
   const resetForm = () => {
     setName("");
     setTypeNames([]);
