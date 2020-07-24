@@ -76,7 +76,7 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
   const [sentence, setSentence] = useState("");
   const [open, setOpen] = React.useState(false);
   const [showNotification, setShowNotification] = useState(false);
-  const [selectedWord, setSelectedWord] = useState({});
+  const [selectedWord, setSelectedWord] = useState(null);
 
   useEffect(() => {
     setSelectedWord(word);
@@ -84,9 +84,10 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
       setFormData(word);
     }
     setOpen(isOpen);
+    
   }, [isOpen, word]);
 
-  const handleAddTask = useCallback(async (event) => {
+  const handleAddTask = async (event) => {
     event.preventDefault();
     const {
       wordName,
@@ -111,19 +112,18 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
     } catch (error) {
       alert(error);
     }
-  }, []);
+  };
 
   async function writeTaskData(name, types, date, sentence) {
 
-    console.log(`tu ${word}`)
     const id = selectedWord
       ? selectedWord.uid 
       : firebase.database().ref().child("words").push().key;
   
-    // await firebase
-    //   .database()
-    //   .ref(`words/${id}`)
-    //   .set({ name, types, date, sentence });
+    await firebase
+      .database()
+      .ref(`words/${id}`)
+      .set({ name, types, date, sentence });
   }
 
   const handleClose = () => {

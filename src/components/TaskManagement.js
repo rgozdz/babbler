@@ -56,7 +56,7 @@ const TaskManagement = () => {
         <Fab
           color="secondary"
           className={classes.fixed}
-          onClick={handleClickOpen}
+          onClick={() => handleClickOpen()}
         >
           <AddIcon />
         </Fab>
