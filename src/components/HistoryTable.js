@@ -8,6 +8,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import TablePagination from '@material-ui/core/TablePagination';
 import { AuthContext } from "../Auth";
 import { getUserTasksHistory }  from "../firebase/firebaseService";
 
@@ -22,6 +23,8 @@ export default function HistoryTable() {
   const [words, setWords] = useState(null);
   const { currentUser } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     getUserTasksHistory(currentUser)
@@ -29,8 +32,18 @@ export default function HistoryTable() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   if (!isLoading) {
     return (
+      <>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -42,7 +55,7 @@ export default function HistoryTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {words? words.map((row) => (
+            {words? words.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
               <TableRow key={row.uid}>
                 <TableCell component="th" scope="row">
                   {row.name}
@@ -55,6 +68,16 @@ export default function HistoryTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 15, 25, 50]}
+        component="div"
+        count={words.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </>
     );
   }
 

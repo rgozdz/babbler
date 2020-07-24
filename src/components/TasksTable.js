@@ -7,6 +7,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import TablePagination from '@material-ui/core/TablePagination';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import IconButton from "@material-ui/core/IconButton";
@@ -33,7 +34,17 @@ export default function TaskTable({words, updateTasksTab, handleOpenEditTask}) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [selectedWord, setSelectedWord] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   const handleClickOpen = (word) => {
     setSelectedWord(word);
@@ -92,7 +103,7 @@ export default function TaskTable({words, updateTasksTab, handleOpenEditTask}) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {words? words.map((row) => (
+            {words? words.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
               <TableRow key={row.uid}>
                 <TableCell component="th" scope="row">
                   {row.name}
@@ -115,6 +126,15 @@ export default function TaskTable({words, updateTasksTab, handleOpenEditTask}) {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 15, 25, 50]}
+        component="div"
+        count={words.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
 
       <DeleteTaskDialog
         selectedWord={selectedWord} 
