@@ -12,8 +12,7 @@ import {getAllWords} from "../firebase/firebaseService";
 const useStyles = makeStyles((theme) => ({
   fixed: {
     position: "fixed",
-    bottom: theme.spacing(2),
-    right: theme.spacing(3),
+    bottom: theme.spacing(2)
   },
 }));
 
