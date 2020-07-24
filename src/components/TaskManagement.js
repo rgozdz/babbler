@@ -22,6 +22,7 @@ const TaskManagement = () => {
   const [words, setWords] = useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedWord, setSelectedWord] = useState(null);
 
   useEffect(() => {
     getAllWords()
@@ -35,7 +36,8 @@ const TaskManagement = () => {
     .then(words => setWords(words));
   }
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (word) => {
+    setSelectedWord(word);
     setOpenDialog(true);
   };
 
@@ -47,21 +49,22 @@ const TaskManagement = () => {
     <div>
       {isLoading? 
       <CircularProgress color="secondary" />: 
-      <TaskTable words={words} updateTasksTab={() => updateTasksTab()}></TaskTable>
+      <TaskTable words={words} handleOpenEditTask={(selectedWord) =>handleClickOpen(selectedWord) } updateTasksTab={() => updateTasksTab()}></TaskTable>
       }
 
       <Tooltip title="Add" aria-label="add">
         <Fab
           color="secondary"
           className={classes.fixed}
-          onClick={handleClickOpen}
+          onClick={() => handleClickOpen()}
         >
           <AddIcon />
         </Fab>
       </Tooltip>
 
       <AddTaskDialog 
-        isOpen={openDialog} 
+        isOpen={openDialog}
+        word={selectedWord}
         updateTasksTab={() => updateTasksTab()}
         handleCloseDialog={() => handleCloseDialog()}>
       </AddTaskDialog>
