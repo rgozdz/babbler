@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/babbler/precache-manifest.63d0c8bbdd2d43ef3837c4b94c41df36.js"
+  "/babbler/precache-manifest.8ea9c0294bd51337f57d064994b69838.js"
 );
 
 self.addEventListener('message', (event) => {
