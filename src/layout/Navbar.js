@@ -7,7 +7,6 @@ import Chip from "@material-ui/core/Chip";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import firebase from "../firebase";
-import Avatar from "@material-ui/core/Avatar";
 import FaceTwoToneIcon from "@material-ui/icons/FaceTwoTone";
 
 const AppNavbar = ({ classes, handleDrawerToggle }) => {

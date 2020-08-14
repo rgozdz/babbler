@@ -60,7 +60,7 @@ export default function DailyTask() {
     getDailyWord(currentUser)
       .then((dailyWord) => setWord(dailyWord))
       .finally(() => setIsLoading(false));
-  }, []);
+  });
 
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();

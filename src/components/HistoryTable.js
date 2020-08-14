@@ -30,7 +30,7 @@ export default function HistoryTable() {
     getUserTasksHistory(currentUser)
       .then(userTasks => setWords(userTasks))
       .finally(() => setIsLoading(false));
-  }, []);
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
