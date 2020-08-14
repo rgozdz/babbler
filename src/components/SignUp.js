@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -34,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function writeUserData(userId, firstName, lastName, email) {
+async function writeUserData(userId, firstName, lastName, email, username) {
   await firebase
     .database()
     .ref("users/" + userId)
@@ -42,6 +41,7 @@ async function writeUserData(userId, firstName, lastName, email) {
       firstName,
       lastName,
       email,
+      username
       //profile_picture : imageUrl
     });
 }
@@ -50,14 +50,14 @@ const SignUp = ({ history }) => {
   const handleSignUp = useCallback(
     async (event) => {
       event.preventDefault();
-      const { firstName, lastName, email, password } = event.target.elements;
+      const { firstName, lastName, username, email, password } = event.target.elements;
       try {
         await firebase
           .auth()
           .createUserWithEmailAndPassword(email.value, password.value);
 
         const uid = firebase.auth().currentUser.uid;
-        await writeUserData(uid, firstName.value, lastName.value, email.value);
+        await writeUserData(uid, firstName.value, lastName.value, email.value, username.value);
         history.push("");
       } catch (error) {
         alert(error);
@@ -99,6 +99,17 @@ const SignUp = ({ history }) => {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
               />
             </Grid>
             <Grid item xs={12}>

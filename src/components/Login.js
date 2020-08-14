@@ -1,5 +1,4 @@
-import React, { useCallback, useContext } from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, { useCallback, useContext, useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -9,13 +8,14 @@ import { Redirect, withRouter } from "react-router-dom";
 import { Link as MaterialLink } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Logo from "./Logo";
 import { AuthContext } from "../Auth";
 import firebase from "../firebase";
+import { getUserByName } from "../firebase/firebaseService";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,17 +38,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Login = ({ history }) => {
+
   const handleLogin = useCallback(
     async (event) => {
       event.preventDefault();
-      const { email, password } = event.target.elements;
+      const { username, password } = event.target.elements;
       try {
+        let user;
+        await getUserByName(username.value)
+          .then(fetchedUser =>user =  fetchedUser);
+          
+        if(user == null) {
+          throw Error("wrong username or password");
+        }
         await firebase
           .auth()
-          .signInWithEmailAndPassword(email.value, password.value);
+          .signInWithEmailAndPassword(user.email, password.value);
         history.push("");
-      } catch (error) {
-        alert(error);
+      } catch (error) {      
+        setError(error);
       }
     },
     [history]
@@ -56,7 +64,21 @@ const Login = ({ history }) => {
 
   const classes = useStyles();
   const { currentUser } = useContext(AuthContext);
+  const [error, setError] = useState(null);
   const signUpUrl = `${process.env.PUBLIC_URL}/#/signup`;
+
+  const clearError = ()=> {
+    setError(null);
+  }
+
+  let alert = null;
+  if(error) {
+    alert = 
+    <Alert severity="error">
+        <AlertTitle>Login failed</AlertTitle>
+        {error.message}
+    </Alert>
+  }
 
   if (currentUser) {
     return <Redirect to="/" />;
@@ -73,17 +95,19 @@ const Login = ({ history }) => {
         <form className={classes.form} onSubmit={handleLogin}>
           <TextField
             variant="outlined"
+            onChange={() => clearError()}
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus
           />
           <TextField
             variant="outlined"
+            onChange={() => clearError()}
             margin="normal"
             required
             fullWidth
@@ -106,6 +130,7 @@ const Login = ({ history }) => {
           >
             Log In
           </Button>
+          {alert}
           <Grid container justify="center">
             {/* <Grid item xs>
               <MaterialLink href="/reset-password" variant="body2">
@@ -133,7 +158,7 @@ export const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <MaterialLink color="inherit" href="https://github.com/rgozdz/">
+      <MaterialLink color="inherit" href="https://rgozdz.github.io/portfolio/">
         aware4dev
       </MaterialLink>{" "}
       {new Date().getFullYear()}

@@ -1,6 +1,33 @@
 
 import firebase from "../firebase";
 
+export const getUserByName = (username) => {
+
+  let allWordsPromise = new Promise((resolve, reject) => {
+      firebase
+      .database()
+      .ref("/users/")
+      .once("value")
+      .then((snapshot) => {
+
+        const users = snapshot.val();
+        if (users) {
+          const userList = Object.keys(users).map((key) => ({
+            ...users[key],
+            uid: key
+          }));
+
+          const user = userList.find(x => x.username === username);
+          resolve(user);
+        }
+        
+        resolve(null);
+      })
+  })
+  
+  return allWordsPromise;
+}
+
 export const getAllWords = () => {
 
     let allWordsPromise = new Promise((resolve, reject) => {
@@ -24,6 +51,68 @@ export const getAllWords = () => {
     })
     
     return allWordsPromise;
+}
+
+export const getWordByName = (name) => {
+  const word = getAllWords()
+      .then((allWords) => {
+        const foundWord = allWords
+          .find(word => word.name === name);
+
+        return foundWord;
+    })
+    return word;
+}
+
+export const getFirstFreeDate = () => {
+  const word = new Promise((resolve) => {
+    getAllWords()
+    .then((allWords) => {
+      
+      const wordsInFuture = allWords.filter(word => new Date(word.date).getTime() > Date.now());
+      let nextDay = new Date();
+      let foundWord = null;
+      
+      do {
+
+        nextDay.setDate(nextDay.getDate() + 1);
+        let formattedDate = formatDate(nextDay);
+        foundWord = wordsInFuture.find(word => word.date === formattedDate);
+ 
+      } while(!!foundWord);
+
+      resolve(formatDate(nextDay));
+
+    });
+  });
+
+  return word;
+}
+
+export const isDateAlreadyUsed = (date) => {
+  const word = new Promise((resolve) => {
+    getAllWords()
+    .then((allWords) => {
+      
+      const wordsInFuture = allWords.filter(word => new Date(word.date).getTime() > Date.now());
+      const foundWord = wordsInFuture.find(word => word.date === date);
+      resolve(!foundWord);
+    });
+  });
+
+  return word;
+}
+
+export const isNameAlreadyUsed = (name) => {
+  const word = new Promise((resolve) => {
+    getAllWords()
+    .then((allWords) => {
+      const foundWord = allWords.find(word => word.name === name);
+      resolve(!foundWord);
+    });
+  });
+
+  return word;
 }
 
 export const deleteWord = (uid) => {
@@ -126,21 +215,27 @@ export const getUserTasksHistory = (currentUser) => {
   return dailyWordPromise;
 }
 
+const formatDate = (date) => {
+  const dateTimeFormat = new Intl.DateTimeFormat("en", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const [
+    { value: month },
+    ,
+    { value: day },
+    ,
+    { value: year },
+  ] = dateTimeFormat.formatToParts(date);
+  const formattedDate = `${year}-${month}-${day}`;
+
+  return formattedDate;
+}
+
 const isToday = (element) =>{
     let date = new Date();
-    const dateTimeFormat = new Intl.DateTimeFormat("en", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    const [
-      { value: month },
-      ,
-      { value: day },
-      ,
-      { value: year },
-    ] = dateTimeFormat.formatToParts(date);
-    const today = `${year}-${month}-${day}`;
+    const today = formatDate(date);
   
     return element.date === today;
 }

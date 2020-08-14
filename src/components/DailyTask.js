@@ -67,8 +67,10 @@ export default function DailyTask() {
 
   const handleDisabled = () => {
     const input = document.querySelector("#standard-basic");
-    if (input.value === word.name) {
+    if (input.value.trim() === word.name) {
       setIsNextDisabled(false);
+    } else {
+      setIsNextDisabled(true);
     }
   };
 

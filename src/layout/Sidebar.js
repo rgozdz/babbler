@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../Auth";
 import Logo from "../components/Logo";
 import Footer from "./Footer";
+import { useLocation } from 'react-router-dom'; 
 
 function ResponsiveDrawer(props) {
   const { window, mobileOpen, classes } = props;
@@ -22,6 +23,14 @@ function ResponsiveDrawer(props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { currentUser } = useContext(AuthContext);
 
+  const location = useLocation();
+  useEffect(() =>{
+    menuTabs.forEach((element, index) => {
+      if(element.path === location.pathname){
+        setSelectedIndex(index);
+      }
+    });
+  });
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
