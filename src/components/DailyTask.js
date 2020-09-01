@@ -102,8 +102,8 @@ export default function DailyTask() {
       case 0:
         return (
           <>
-            <span className={classes.wordName}>{word.name}</span><br/>
-            <span className={classes.wordType}>{word.types}</span><br/><br/>
+            <span className={classes.wordName}>{word.name}</span><br />
+            <span className={classes.wordType}>{word.types}</span><br /><br />
             <span className={classes.sentense}>{word.sentence}</span>
           </>
         );

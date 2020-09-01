@@ -1,31 +1,56 @@
 
 import firebase from "../firebase";
 
+
+const getUsers = () => {
+  const users = new Promise((resolve) => {
+    firebase
+    .database()
+    .ref("/users/")
+    .once("value")
+    .then((snapshot) => {
+
+      const users = snapshot.val();
+      if (users) {
+        const userList = Object.keys(users).map((key) => ({
+          ...users[key],
+          uid: key
+        }));
+
+        resolve(userList);
+      }
+      
+      resolve(null);
+    })
+
+  })
+
+  return users;
+
+}
+
 export const getUserByName = (username) => {
 
-  let allWordsPromise = new Promise((resolve, reject) => {
-      firebase
-      .database()
-      .ref("/users/")
-      .once("value")
-      .then((snapshot) => {
-
-        const users = snapshot.val();
-        if (users) {
-          const userList = Object.keys(users).map((key) => ({
-            ...users[key],
-            uid: key
-          }));
-
-          const user = userList.find(x => x.username === username);
-          resolve(user);
-        }
-        
-        resolve(null);
-      })
+  const user = new Promise((resolve) => {
+     getUsers().then(users => {
+      const user = users.find(x => x.username === username);
+      resolve(user);
+     })
   })
   
-  return allWordsPromise;
+  return user;
+}
+
+export const getUserByEmail = (email) => {
+
+  const user = new Promise((resolve) => {
+    getUsers().then(users => {
+     const user = users.find(x => x.email === email);
+     resolve(user);
+    })
+ })
+ 
+ return user;
 }
 
 export const getAllWords = () => {
@@ -89,8 +114,11 @@ export const getFirstFreeDate = () => {
   return word;
 }
 
-export const isDateAlreadyUsed = (date) => {
+export const isDateValid = (date, currentDate) => {
   const word = new Promise((resolve) => {
+    if(date === currentDate){
+      resolve(true);
+    }
     getAllWords()
     .then((allWords) => {
       
@@ -103,8 +131,12 @@ export const isDateAlreadyUsed = (date) => {
   return word;
 }
 
-export const isNameAlreadyUsed = (name) => {
+export const isNameValid = (name, excludeWord) => {
   const word = new Promise((resolve) => {
+
+    if(name === excludeWord?.name){
+      resolve(true);
+    }
     getAllWords()
     .then((allWords) => {
       const foundWord = allWords.find(word => word.name === name);
@@ -113,6 +145,26 @@ export const isNameAlreadyUsed = (name) => {
   });
 
   return word;
+}
+
+export const isUsernamValid = (name) => {
+  const user = new Promise((resolve) => {
+    getUserByName(name).then(data =>{
+      resolve(!data);
+    })
+  });
+
+  return user;
+}
+
+export const isEmailValid = (email) => {
+  const user = new Promise((resolve) => {
+    getUserByEmail(email).then(data =>{
+      resolve(!data);
+    })
+  });
+
+  return user;
 }
 
 export const deleteWord = (uid) => {
@@ -126,6 +178,25 @@ export const deleteWord = (uid) => {
 })
 
   return deletedWordPromise;
+}
+
+export const createUser = (userId, firstName, lastName, email, username) => {
+
+  let createUserPromise = new Promise((resolve) => {
+  firebase
+    .database()
+    .ref("users/" + userId)
+    .set({
+      firstName,
+      lastName,
+      email,
+      username
+      //profile_picture : imageUrl
+    })
+    .then(() => resolve("user created"))
+  })
+
+  return createUserPromise;
 }
 
 export const getDailyWord = (currentUser) => {

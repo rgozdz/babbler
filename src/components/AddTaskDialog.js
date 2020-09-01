@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -21,7 +21,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useEffect } from "react";
 import Slide from '@material-ui/core/Slide';
-import { getFirstFreeDate, isDateAlreadyUsed, isNameAlreadyUsed } from "../firebase/firebaseService";
+import { getFirstFreeDate, isDateValid, isNameValid } from "../firebase/firebaseService";
 import FormControl from '@material-ui/core/FormControl';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -63,9 +63,14 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(2),
     right: theme.spacing(3),
   },
-  formControl: {
-    margin: theme.spacing(2),
-    minWidth: 120,
+  datePicker: {
+    margin: theme.spacing(1),
+    minWidth: 100,
+  },
+  typeSelect: {
+    margin: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+    minWidth: 240,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -73,43 +78,49 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
-  
+
   const classes = useStyles();
-  const theme = useTheme();
-  
-  const { handleSubmit, register, errors } = useForm();
-  const [name, setName] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [typeName, setTypeName] = useState("");
-  const [sentence, setSentence] = useState("");
   const [open, setOpen] = React.useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [selectedWord, setSelectedWord] = useState(null);
 
+  const { handleSubmit, register, errors, clearErrors, setValue, watch } = useForm({
+    mode: "onChange"
+  });
+
+  const WORD_NAME = "wordName";
+  const DATE_PICKER = "datePicker";
+  const SENTENCE = "exampleSentence";
+  const WORD_TYPE = "wordType";
+
+  const names = ["noun", "verb", "adjective"];
+  const { wordName, datePicker, wordType, exampleSentence } = watch();
+
   useEffect(() => {
+    formRegister();
     resetForm();
-    if(!!word) {
+    if (!!word) {
       setSelectedWord(word);
       setFormData(word);
     } else {
-      getFirstFreeDate().then(data =>setSelectedDate(data));
+      getFirstFreeDate().then(data => setValue(DATE_PICKER, data));
+      setSelectedWord(null);
     }
     setOpen(isOpen);
-    
+
   }, [isOpen, word]);
 
   const handleAddTask = async (data) => {
     const {
       wordName,
       datePicker,
-      wordTypes,
+      wordType,
       exampleSentence,
     } = data;
     try {
-      
       writeTaskData(
         wordName,
-        wordTypes.toString(),
+        wordType,
         datePicker,
         exampleSentence
       );
@@ -126,9 +137,9 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
 
   async function writeTaskData(name, types, date, sentence) {
     const id = selectedWord
-      ? selectedWord.uid 
+      ? selectedWord.uid
       : firebase.database().ref().child("words").push().key;
-  
+
     await firebase
       .database()
       .ref(`words/${id}`)
@@ -137,43 +148,35 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
 
   const tomorrow = () => {
     let date = new Date();
-    date.setDate(date.getDate() +1);
+    date.setDate(date.getDate() + 1);
 
     return date;
   }
 
+  const formRegister = () => {
+    [WORD_NAME, DATE_PICKER, WORD_TYPE, SENTENCE]
+      .forEach((inputName) => register(inputName))
+  }
+
   const handleClose = () => {
     setOpen(false);
-    setSelectedWord(null);
+    clearErrors();
     handleCloseDialog();
   };
 
   const setFormData = (word) => {
-    setName(word.name);
-    setSelectedDate(word.date);
-    setTypeName(word.types);
-    setSentence(word.sentence);
+    setValue(WORD_NAME, word.name);
+    setValue(DATE_PICKER, word.date);
+    setValue(WORD_TYPE, word.types);
+    setValue(SENTENCE, word.sentence);
   }
+
   const resetForm = () => {
-    setName("");
-    setTypeName("");
-    setSentence("");
+    [WORD_NAME, WORD_TYPE, SENTENCE].forEach((inputName) => setValue(inputName, ""));
   }
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const handleTypeNamesChange = (event) => {
-    setTypeName(event.target.value);
-  };
-
-  const handleSentenceChange = (event) => {
-    setSentence(event.target.value);
+  const handleChange = (event) => {
+    setValue(event.target.name, event.target.value);
   };
 
   const handleShowNotification = () => {
@@ -188,16 +191,6 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
     setShowNotification(false);
   };
 
-  const names = ["noun", "verb", "adjective"];
-
-  function getStyles(name, personName, theme) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -205,143 +198,143 @@ const AddTaskDialog = ({ isOpen, handleCloseDialog, updateTasksTab, word }) => {
 
   return (
     <div>
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      TransitionComponent={Transition}
-      keepMounted
-      aria-labelledby="alert-dialog-slide-title"
-      aria-describedby="alert-dialog-slide-description"
-    >
-      <form className={classes.form} onSubmit={handleSubmit(handleAddTask)}>
-        <DialogTitle id="alert-dialog-title">{(selectedWord? `Edit ${selectedWord.name}` : "Add new word")}</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                required
-                autoComplete="wordName"
-                name="wordName"
-                value={name}
-                onChange={handleNameChange}
-                variant="outlined"
-                inputRef={
-                  register({ 
-                    required: 'Word name is required', 
-                    minLength: {
-                      value: 3,
-                      message: 'Word name should be longer than 2 characters'
-                    },
-                    validate: value => (!!selectedWord || isNameAlreadyUsed(value))
-                  })
-                }
-                helperText={errors.wordName?.type === 'validate'? 'Word name already used': 
-                  errors.wordName ? errors.wordName.message : ''}
-                error={ errors.wordName ? true : false }
-                fullWidth
-                label="Word name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  margin="normal"
-                  id="date-picker-dialog"
-                  label="Word for day"
-                  format="yyyy-MM-dd"
-                  value={selectedDate}
-                  name="datePicker"
-                  onChange={handleDateChange}
-                  minDate = {tomorrow()}
-                  inputRef={
-                    register({ 
-                      required: 'Date is required', 
-                      validate: value => (!!selectedWord ||isDateAlreadyUsed(value)), 
-                    })
-                  }
-                  helperText={errors.datePicker?.type === 'validate'? 'Date already was used': 
-                    errors.datePicker ? errors.datePicker.message : ''}
-                  error={errors.datePicker ? true : false }
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}              
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="type-native-simple">Type</InputLabel>
-                <Select
-                  native
-                  name="wordTypes"
-                  id="type-native-simple"
-                  value={typeName}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <form className={classes.form} onSubmit={handleSubmit(handleAddTask)}>
+          <DialogTitle id="alert-dialog-title">{(selectedWord ? `Edit ${selectedWord.name}` : "Add new word")}</DialogTitle>
+          <DialogContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
                   required
-                  onChange={handleTypeNamesChange}
+                  autoComplete="wordName"
+                  name="wordName"
+                  value={wordName}
+                  onChange={handleChange}
+                  variant="outlined"
                   inputRef={
-                    register({ 
-                      required: 'Type is required' 
+                    register({
+                      required: 'Word name is required',
+                      minLength: {
+                        value: 3,
+                        message: 'Word name should be longer than 2 characters'
+                      },
+                      validate: value => isNameValid(value, selectedWord)
                     })
                   }
-                >
-                  <option></option>
-                  {names.map((name) => (
-                  <option
-                    key={name}
-                    value={name}
-                    style={getStyles(name, typeName, theme)}
-                  >
-                    {name}
-                  </option>
-                ))}
-                </Select>
+                  helperText={errors.wordName?.type === 'validate' ? 'Word name already used' :
+                    errors.wordName ? errors.wordName.message : ''}
+                  error={errors.wordName ? true : false}
+                  fullWidth
+                  label="Word name"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl className={classes.datePicker}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      margin="normal"
+                      id="date-picker-dialog"
+                      label="Word for day"
+                      format="yyyy-MM-dd"
+                      value={datePicker}
+                      name="datePicker"
+                      onChange={handleChange}
+                      minDate={tomorrow()}
+                      inputRef={
+                        register({
+                          required: 'Date is required',
+                          validate: value => isDateValid(value, selectedWord?.date),
+                        })
+                      }
+                      helperText={errors.datePicker?.type === 'validate' ? 'Date already was used' :
+                        errors.datePicker ? errors.datePicker.message : ''}
+                      error={errors.datePicker ? true : false}
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                    />
+                  </MuiPickersUtilsProvider>
                 </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="exampleSentence"
-                value={sentence}
-                onChange={handleSentenceChange}
-                label="Sentence"
-                id="sentence"
-                autoComplete="sentence"
-                inputRef={
-                  register({ 
-                    required: 'Sentence name is required', 
-                    minLength: {
-                      value: 15,
-                      message: 'Sentence should be longer than 15 characters'
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl className={classes.typeSelect}>
+                  <InputLabel htmlFor="type-native-simple">Type</InputLabel>
+                  <Select
+                    native
+                    name="wordType"
+                    id="type-native-simple"
+                    value={wordType}
+                    required
+                    onChange={handleChange}
+                    inputRef={
+                      register({
+                        required: 'Type is required'
+                      })
                     }
-                  })
-                }
-                helperText={errors.exampleSentence ? errors.exampleSentence.message : ''}
-                error={errors.exampleSentence ? true : false }
-              />
+                  >
+                    <option></option>
+                    {names.map((name) => (
+                      <option
+                        key={name}
+                        value={name}
+                      >
+                        {name}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="exampleSentence"
+                  value={exampleSentence}
+                  onChange={handleChange}
+                  label="Sentence"
+                  id="sentence"
+                  autoComplete="sentence"
+                  inputRef={
+                    register({
+                      required: 'Sentence name is required',
+                      minLength: {
+                        value: 15,
+                        message: 'Sentence should be longer than 15 characters'
+                      }
+                    })
+                  }
+                  helperText={errors.exampleSentence ? errors.exampleSentence.message : ''}
+                  error={errors.exampleSentence ? true : false}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() =>handleClose()} color="primary">
-            Dismiss
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => handleClose()} color="primary">
+              Dismiss
           </Button>
-          <Button type="submit" color="primary" autoFocus>
-          {(selectedWord? "Edit" : "Create")}
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+            <Button type="submit" color="primary" autoFocus>
+              {(selectedWord ? "Edit" : "Create")}
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
 
       <Snackbar open={showNotification} autoHideDuration={6000} onClose={handleCloseNotify}>
-      <Alert onClose={handleCloseNotify} severity="success">
-          Task was {(selectedWord? "edited" : "created")}!
+        <Alert onClose={handleCloseNotify} severity="success">
+          Task was {(selectedWord ? "edited" : "created")}!
       </Alert>
-    </Snackbar>
+      </Snackbar>
     </div>
-
   );
 };
 

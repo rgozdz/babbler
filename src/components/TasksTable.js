@@ -35,7 +35,7 @@ export default function TaskTable({words, updateTasksTab, handleOpenEditTask}) {
   const [showNotification, setShowNotification] = useState(false);
   const [selectedWord, setSelectedWord] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
